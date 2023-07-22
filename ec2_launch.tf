@@ -73,7 +73,7 @@ resource "aws_instance" "custom_ec2_instance" {
   # Add additional configuration for the EC2 instance if required (e.g., user_data, tags, etc.)
 }
 
-# Output the public IP address of the instance for convenience
+# Output the provide you information if you need any
 output "public_ip" {
   value = aws_instance.custom_ec2_instance.public_ip
 }
