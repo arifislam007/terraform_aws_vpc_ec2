@@ -35,7 +35,7 @@ resource "aws_security_group" "custom_sg" {
 }
 # Launch the EC2 instance in the public subnet and attach the security group
 resource "aws_instance" "custom_ec2_instance" {
-  ami           = "ami-0a1179631ec8933d7"
+  ami           = "ami-0e001c9271cf7f3b9"
   instance_type = "t2.medium"
   tags = {
     Name = "App-Server"
@@ -47,23 +47,20 @@ resource "aws_instance" "custom_ec2_instance" {
   key_name = aws_key_pair.app_ssh_key.key_name
   # Add additional configuration for the EC2 instance if required (e.g., user_data, tags, etc.)
   user_data = <<-EOF
-              #!/bin/bash
-              # Update the package lists
-              sudo yum update -y
-              # Install Docker
-              sudo amazon-linux-extras install docker
-              # Start Docker service
-              sudo systemctl start docker
-              # Enable Docker service to start on boot
-              sudo systemctl enable docker
-              sudo usermod -aG docker ec2-user && newgrp docker
-              # Install Minikube
-              curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
-              && chmod +x minikube
-              sudo mv minikube /usr/local/bin/
-              minikube addons enable ingress
-              minikube start
-              #minikube tunnel --bind-address '*'&
+                 #!/bin/bash
+                 # Install OpenJDK 17 JRE Headless
+                 sudo apt install openjdk-17-jre-headless -y
+                 # Download Jenkins GPG key
+                 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+                 https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+                 # Add Jenkins repository to package manager sources
+                 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+                 https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+                 /etc/apt/sources.list.d/jenkins.list > /dev/null
+                 # Update package manager repositories
+                 sudo apt-get update
+                 # Install Jenkins
+                 sudo apt-get install jenkins -y
 
               EOF
 
