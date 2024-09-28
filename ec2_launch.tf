@@ -61,7 +61,7 @@ resource "aws_security_group" "custom_sg" {
 
 # Launch the EC2 instance in the public subnet and attach the security group
 resource "aws_instance" "custom_ec2_instance" {
-  ami           = "ami-0261755bbcb8c4a84"  # Change this to the new AMI ID
+  ami           = "ami-0ebfd941bbafe70c6"  # Change this to the new AMI ID
   instance_type = "t2.micro"               # Change this to your desired instance type
   subnet_id     = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.custom_sg.id]
